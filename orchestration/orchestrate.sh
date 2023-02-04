@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+WORKING_DIR=$(dirname $(realpath $0))
+echo $WORKING_DIR
 
 RED="\033[31m"
 GREEN="\033[32m"
