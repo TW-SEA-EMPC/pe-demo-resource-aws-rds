@@ -1,0 +1,19 @@
+name: deploy-rds-1
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/deploy-${{ values.name }}.yml'
+      - '.github/workflows/resource-workflow.yml'
+      - 'resources/${{ values.name }}/**'
+      - 'environments/pre-prod/${{ values.name }}/**'
+
+concurrency: {% raw %}${{ github.workflow }}{% endraw %}%
+
+jobs:
+  deploy-resource:
+    uses: ./.github/workflows/resource-workflow.yml
+    with:
+      resource: ${{ values.name }}
+      environment: pre-prod

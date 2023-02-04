@@ -1,0 +1,118 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: pe-demo-starter-golang
+  title: PE Demo Starter Golang
+  description: Template for the scaffolding of a golang service.
+spec:
+  owner: user:ankitwal
+  type: service
+
+  parameters:
+    - title: Resource name
+      required:
+        - name
+        - version
+        - db_engine_major_version
+        - default_db_instance_size
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Name scoped to the the component
+          default: "rds"
+          ui:options:
+            rows: 5
+        version:
+          title: Version
+          type: string
+          description: Unique name of the component
+          default: "v0.0.2-alpha"
+          ui:options:
+            rows: 5
+        db_engine_major_version:
+          title: DB Engine Major Version
+          type: string
+          description: The major version of the database engine
+          default: "11"
+          ui:options:
+            rows: 5
+        default_db_instance_size:
+          title: Default DB Instance Size
+          type: string
+          description: You can specify a default and override per environment
+          default: "db.t4g.medium"
+          ui:options:
+            rows: 5
+
+    - title: Choose the component location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            allowedOwners:
+              - TW-SEA-EMPC
+
+  steps:
+    - id: fetch-base
+      name: Fetch golang starter template
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          name : ${{ parameters.name | lower | replace(" ", "-") }}
+          version: ${{ parameters.version }}
+          db_engine_major_version: ${{ parameters.db_engine_major_version }}
+          default_db_instance_size: ${{ parameters.default_db_instance_size }}
+
+    - id: pull-request-bootstrap
+      name: Generate bootstrap resources
+      action: publish:github:pull-request
+      input:
+        title: "Add ${{ parameters.name }} component bootstrap resources"
+        description: "This is an automatically generated pull request to add ${{ parameters.name }} component"
+        branchName: ${{ parameters.name | lower | replace(' ', '-') }}-bootstrap-resources
+        repoUrl: github.com?repo=pe-demo-component-bootstrap&owner=TW-SEA-EMPC
+        sourcePath: ./template
+
+    - id: dispatch-bootstrap-component-action
+      name: Dispatch bootstrap resources creation
+      action: github:actions:dispatch
+      input:
+        branchOrTagName: main
+        repoUrl: github.com?repo=pe-demo-component-bootstrap&owner=TW-SEA-EMPC
+        workflowId: generate-component-bootstrap.yml
+        workflowInputs:
+          component-name: ${{ parameters.name | lower | replace(' ', '-') }}
+          team-name: ${{ parameters.owner }}
+          # ref: https://github.com/backstage/backstage/issues/15268#issuecomment-1380354903
+          # need to force number to be string
+          pull-request-number: ${{ steps['pull-request-bootstrap'].output.pullRequestNumber | dump}}
+
+    - id: register-bootstrap
+      name: Register bootstrap resources
+      action: catalog:register
+      input:
+        repoContentsUrl: https://github.com/TW-SEA-EMPC/pe-demo-component-bootstrap/blob/main
+        catalogInfoPath: /generated-resources/dev/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
+        optional: true
+
+  output:
+    links:
+      - title: Component repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open component in catalog
+        icon: catalog
+        entityRef: ${{ steps['register-component'].output.entityRef }}
+      - title: Bootstrap resources repository
+        url: ${{ steps['pull-request-bootstrap'].output.remoteUrl }}
+      - title: Bootstrap resources in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

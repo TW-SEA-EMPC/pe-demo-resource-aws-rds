@@ -1,0 +1,2 @@
+resource: TW-SEA-EMPC/pe-demo-resource-aws-rds
+version: ${{ values.version }}

@@ -1,0 +1,2 @@
+engine_major_version = "${{ values.db_engine_major_version }}"
+instance_size        = "${{ values.default_db_instance_size }}"
