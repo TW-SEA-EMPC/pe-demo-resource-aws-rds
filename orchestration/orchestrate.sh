@@ -34,8 +34,11 @@ fi
 
 STACK="rds"
 PLATFORM_ENVIRONMENT="iqa"
+pushd ${WORKING_DIR}
+echo Im here $pwd 
 terraform init --backend-config="key=${PLATFORM_ENVIRONMENT}/${COMPONENT}-${ENVIRONMENT}-${STACK}"
 terraform apply --var-file="${CONFIG_FILE_PATH}"\
   -var "component=${COMPONENT}" \
   -var "environment=${ENVIRONMENT}" \
   -var "team=${TEAM}"
+popd
