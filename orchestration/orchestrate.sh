@@ -31,11 +31,11 @@ if [[ -z $CONFIG_FILE_PATH ]]; then
 	echo -e "${RED}Please specify the COMPONENT, ENVIRONMENT, TEAM and CONFIG_FILE_PATH for the STACK${RESET} eg > ${GREEN}tf.sh <component> <environment> <team> <config_file_path>${RESET}"
   exit 1
 fi
+CONFIG_FILE_PATH=$(realpath $CONFIG_FILE_PATH)
 
 STACK="rds"
 PLATFORM_ENVIRONMENT="iqa"
 pushd ${WORKING_DIR}
-echo Im here $pwd 
 terraform init --backend-config="key=${PLATFORM_ENVIRONMENT}/${COMPONENT}-${ENVIRONMENT}-${STACK}"
 terraform apply --var-file="${CONFIG_FILE_PATH}"\
   -var "component=${COMPONENT}" \
