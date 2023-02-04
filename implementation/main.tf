@@ -20,7 +20,7 @@ module "cluster" {
   name           = local.name
   engine         = "aurora-postgresql"
   engine_version = var.engine_major_version
-  instance_class = "db.t3.medium"
+  instance_class = var.instance_size
   instances = {
     one = {}
   }
@@ -31,7 +31,6 @@ module "cluster" {
   subnets                = local.database_subnets
 
   allowed_security_groups = [local.cluster_primary_security_group_id]
-#  allowed_cidr_blocks     = ["10.0.0.0/20"]
 
   storage_encrypted   = true
   apply_immediately   = true
