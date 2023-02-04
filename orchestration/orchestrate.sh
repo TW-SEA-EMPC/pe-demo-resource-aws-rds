@@ -9,7 +9,8 @@ RESET="\033[0m"
 COMPONENT=$1
 ENVIRONMENT=$2
 TEAM=$3
-CONFIG_FILE_PATH=$4
+DEFAULT_CONFIG_FILE_PATH=$4
+ENV_CONFIG_FILE_PATH=$5
 
 
 if [[ -z $COMPONENT ]]; then
@@ -27,17 +28,20 @@ if [[ -z $TEAM ]]; then
   exit 1
 fi
 
-if [[ -z $CONFIG_FILE_PATH ]]; then
-	echo -e "${RED}Please specify the COMPONENT, ENVIRONMENT, TEAM and CONFIG_FILE_PATH for the STACK${RESET} eg > ${GREEN}tf.sh <component> <environment> <team> <config_file_path>${RESET}"
+if [[ -z $ENV_CONFIG_FILE_PATH || -z $DEFAULT_CONFIG_FILE_PATH ]]; then
+	echo -e "${RED}Please specify the COMPONENT, ENVIRONMENT, TEAM and CONFIG_FILE_PATH for the STACK${RESET} eg > ${GREEN}tf.sh <component> <environment> <team> <config_file_path> ${RESET}"
   exit 1
 fi
-CONFIG_FILE_PATH=$(realpath $CONFIG_FILE_PATH)
+ENV_CONFIG_FILE_PATH=$(realpath $ENV_CONFIG_FILE_PATH)
+DEFAULT_CONFIG_FILE_PATH=$(realpath $DEFAULT_CONFIG_FILE_PATH)
 
 STACK="rds"
 PLATFORM_ENVIRONMENT="iqa"
 pushd ${WORKING_DIR}
 terraform init --backend-config="key=${PLATFORM_ENVIRONMENT}/${COMPONENT}-${ENVIRONMENT}-${STACK}"
-terraform apply --var-file="${CONFIG_FILE_PATH}"\
+terraform apply \
+  --var-file=${DEFAULT_CONFIG_FILE_PATH} \
+  --var-file="${ENV_CONFIG_FILE_PATH}"\
   -var "component=${COMPONENT}" \
   -var "environment=${ENVIRONMENT}" \
   -var "team=${TEAM}"
