@@ -48,17 +48,34 @@ spec:
 
     - title: Choose the component location
       required:
-        - repoUrl
+        - component
+        - owner
       properties:
-        repoUrl:
-          title: Repository Location
+        component:
+          title: Component
           type: string
-          ui:field: RepoUrlPicker
+          ui:field: EntityPicker
           ui:options:
-            allowedHosts:
-              - github.com
-            allowedOwners:
-              - TW-SEA-EMPC
+            allowedKinds:
+              - component
+#      properties:
+#        repoUrl:
+#          title: Repository Location
+#          type: string
+#          ui:field: RepoUrlPicker
+#          ui:options:
+#            allowedHosts:
+#              - github.com
+#            allowedOwners:
+#              - TW-SEA-EMPC
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
 
   steps:
     - id: fetch-base
@@ -71,48 +88,5 @@ spec:
           version: ${{ parameters.version }}
           db_engine_major_version: ${{ parameters.db_engine_major_version }}
           default_db_instance_size: ${{ parameters.default_db_instance_size }}
-
-    - id: pull-request-bootstrap
-      name: Generate bootstrap resources
-      action: publish:github:pull-request
-      input:
-        title: "Add ${{ parameters.name }} component bootstrap resources"
-        description: "This is an automatically generated pull request to add ${{ parameters.name }} component"
-        branchName: ${{ parameters.name | lower | replace(' ', '-') }}-bootstrap-resources
-        repoUrl: github.com?repo=pe-demo-component-bootstrap&owner=TW-SEA-EMPC
-        sourcePath: ./template
-
-    - id: dispatch-bootstrap-component-action
-      name: Dispatch bootstrap resources creation
-      action: github:actions:dispatch
-      input:
-        branchOrTagName: main
-        repoUrl: github.com?repo=pe-demo-component-bootstrap&owner=TW-SEA-EMPC
-        workflowId: generate-component-bootstrap.yml
-        workflowInputs:
-          component-name: ${{ parameters.name | lower | replace(' ', '-') }}
-          team-name: ${{ parameters.owner }}
-          # ref: https://github.com/backstage/backstage/issues/15268#issuecomment-1380354903
-          # need to force number to be string
-          pull-request-number: ${{ steps['pull-request-bootstrap'].output.pullRequestNumber | dump}}
-
-    - id: register-bootstrap
-      name: Register bootstrap resources
-      action: catalog:register
-      input:
-        repoContentsUrl: https://github.com/TW-SEA-EMPC/pe-demo-component-bootstrap/blob/main
-        catalogInfoPath: /generated-resources/dev/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
-        optional: true
-
-  output:
-    links:
-      - title: Component repository
-        url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Open component in catalog
-        icon: catalog
-        entityRef: ${{ steps['register-component'].output.entityRef }}
-      - title: Bootstrap resources repository
-        url: ${{ steps['pull-request-bootstrap'].output.remoteUrl }}
-      - title: Bootstrap resources in catalog
-        icon: catalog
-        entityRef: ${{ steps['register'].output.entityRef }}
+          component: ${{ parameters.component }}
+          owner: ${{ parameters.owner }}
