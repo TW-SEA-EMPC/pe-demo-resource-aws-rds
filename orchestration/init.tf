@@ -3,7 +3,6 @@ terraform {
     region = "ap-southeast-1"
     bucket = "empc-sea-pe-demo-tf-state"
     # <platform-environment>/<component>-<environment>-<stack>
-    key    = "iqa/test-app-100-pre-prod-rds"
   }
   required_providers {
     aws = {
