@@ -39,7 +39,7 @@ STACK="rds"
 PLATFORM_ENVIRONMENT="iqa"
 pushd ${WORKING_DIR}
 terraform init --backend-config="key=${PLATFORM_ENVIRONMENT}/${COMPONENT}-${ENVIRONMENT}-${STACK}"
-terraform apply \
+terraform apply --auto-approve\
   --var-file=${DEFAULT_CONFIG_FILE_PATH} \
   --var-file="${ENV_CONFIG_FILE_PATH}"\
   -var "component=${COMPONENT}" \

@@ -28,7 +28,7 @@ spec:
           title: Version
           type: string
           description: Unique name of the component
-          default: "v0.0.2-alpha"
+          default: "v0.1.0-alpha"
           ui:options:
             rows: 5
         db_engine_major_version:
@@ -91,20 +91,18 @@ spec:
         repoUrl: github.com?repo=${{ parameters.component | replace("component:","") }}&owner=TW-SEA-EMPC
 
 
-#    - id: register
-#      name: Register
-#      action: catalog:register
-#      input:
-#        repoContentsUrl: https://github.com/TW-SEA-EMPC/pe-demo-component-bootstrap/blob/main
-#        catalogInfoPath: /generated-resources/dev/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
-#        optional: true
-#
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: https://github.com/TW-SEA-EMPC/${{ parameters.component | replace("component:","") }}/blob/main
+        catalogInfoPath: resources/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
+        optional: true
+        
   output:
     links:
-#      - title: Component repository
-#        url: ${{ steps['publish'].output.remoteUrl }}
-#      - title: Open component in catalog
-#        icon: catalog
-#        entityRef: ${{ steps['register-component'].output.entityRef }}
+      - title: Open resource in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
       - title: Resources PR
         url: ${{ steps['pull-request-resource'].output.remoteUrl }}
