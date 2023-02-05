@@ -98,7 +98,7 @@ spec:
         repoContentsUrl: https://github.com/TW-SEA-EMPC/${{ parameters.component | replace("component:","") }}/blob/main
         catalogInfoPath: resources/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
         optional: true
-        
+
   output:
     links:
       - title: Open resource in catalog
