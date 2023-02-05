@@ -1,4 +1,4 @@
-name: deploy-rds-1
+name: deploy-${{ values.name }}
 
 on:
   push:

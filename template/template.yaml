@@ -2,9 +2,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: pe-demo-starter-golang
-  title: PE Demo Starter Golang
-  description: Template for the scaffolding of a golang service.
+  name: resource-aws-rds
+  title: Resource AWS RDS
+  description: Self service an AWS RDS resource
 spec:
   owner: user:ankitwal
   type: service
@@ -58,16 +58,6 @@ spec:
           ui:options:
             allowedKinds:
               - component
-#      properties:
-#        repoUrl:
-#          title: Repository Location
-#          type: string
-#          ui:field: RepoUrlPicker
-#          ui:options:
-#            allowedHosts:
-#              - github.com
-#            allowedOwners:
-#              - TW-SEA-EMPC
         owner:
           title: Owner
           type: string
@@ -90,3 +80,31 @@ spec:
           default_db_instance_size: ${{ parameters.default_db_instance_size }}
           component: ${{ parameters.component }}
           owner: ${{ parameters.owner }}
+
+    - id: pull-request-resource
+      name: Create PR for resource
+      action: publish:github:pull-request
+      input:
+        title: "Add ${{ parameters.name }} resource to ${{ parameters.component }}"
+        description: "This is an automatically generated pull request to add ${{ parameters.name }} component"
+        branchName: add-${{ parameters.name | lower | replace(' ', '-') }}-resources
+        repoUrl: github.com?repo=${{ parameters.component | replace("component:","") }}&owner=TW-SEA-EMPC
+
+
+#    - id: register
+#      name: Register
+#      action: catalog:register
+#      input:
+#        repoContentsUrl: https://github.com/TW-SEA-EMPC/pe-demo-component-bootstrap/blob/main
+#        catalogInfoPath: /generated-resources/dev/${{ parameters.name | lower | replace(' ', '-') }}/catalog-info.yaml
+#        optional: true
+#
+  output:
+    links:
+#      - title: Component repository
+#        url: ${{ steps['publish'].output.remoteUrl }}
+#      - title: Open component in catalog
+#        icon: catalog
+#        entityRef: ${{ steps['register-component'].output.entityRef }}
+      - title: Resources PR
+        url: ${{ steps['pull-request-resource'].output.remoteUrl }}
