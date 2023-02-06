@@ -6,8 +6,8 @@ metadata:
   title: Resource AWS RDS
   description: Self service an AWS RDS resource
 spec:
-  owner: user:ankitwal
-  type: service
+  owner: platform
+  type: resource
 
   parameters:
     - title: Resource name
