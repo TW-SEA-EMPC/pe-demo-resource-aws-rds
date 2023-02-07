@@ -1,0 +1,48 @@
+name: lint-compliance-test
+
+on:
+  push:
+    # todo ensure that env vars are promoted via side channel
+    branches: [main]
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  lint:
+    name: "lint"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: lint
+        working-directory: ./implementation/
+        run: ${GITHUB_WORKSPACE}/scripts/tf.sh lint NA NA
+
+  compliance:
+    name: "compliance"
+    needs: lint
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: compliance
+        working-directory: ./implementation/
+        run: ${GITHUB_WORKSPACE}/scripts/tf.sh sec NA NA
+
+  test:
+    needs: compliance
+    name: "test"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: tests
