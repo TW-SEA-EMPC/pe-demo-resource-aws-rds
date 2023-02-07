@@ -8,7 +8,7 @@ metadata:
   links:
     - url: https://github.com/TW-SEA-EMPC/pe-demo-resource-aws-rds#api
       title: API Docs
-      icon: github
+      icon: docs
 spec:
   owner: platform
   type: resource
