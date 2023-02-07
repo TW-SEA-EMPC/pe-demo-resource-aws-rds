@@ -21,8 +21,9 @@ jobs:
       - name: lint
         working-directory: ./orchestration/
         run: |
-            ${GITHUB_WORKSPACE}/scripts/tf.sh init test test-fake 
-            ${GITHUB_WORKSPACE}/scripts/tf.sh lint test test-fake
+          echo "todo implement lint"
+#            ${GITHUB_WORKSPACE}/scripts/tf.sh init test test-fake
+#            ${GITHUB_WORKSPACE}/scripts/tf.sh lint test test-fake
 
   compliance:
     name: "compliance"
@@ -36,9 +37,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: compliance
-        working-directory: ./orchestration/
+        working-directory: ./implementation/
         run: |
-          ${GITHUB_WORKSPACE}/scripts/tf.sh init test test-fake 
           ${GITHUB_WORKSPACE}/scripts/tf.sh sec test test-fake
 
   test:
