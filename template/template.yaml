@@ -5,6 +5,10 @@ metadata:
   name: resource-aws-rds
   title: Resource AWS RDS
   description: Self service an AWS RDS resource
+  links:
+    - url: https://github.com/TW-SEA-EMPC/pe-demo-resource-aws-rds#api
+      title: API Docs
+      icon: github
 spec:
   owner: platform
   type: resource
