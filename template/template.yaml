@@ -32,7 +32,7 @@ spec:
           title: Version
           type: string
           description: Unique name of the component
-          default: "v0.2.0"
+          default: "v0.4.0"
           ui:options:
             rows: 5
         db_engine_major_version:
