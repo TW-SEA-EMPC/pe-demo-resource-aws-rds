@@ -25,7 +25,7 @@ spec:
           title: Name
           type: string
           description: Name scoped to the the component
-          default: "rds"
+          default: "pg-db"
           ui:options:
             rows: 5
         version:
