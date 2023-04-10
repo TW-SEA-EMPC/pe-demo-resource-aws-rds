@@ -32,7 +32,7 @@ version: v0.2.0
 2. Add a configuration file
 ```text
 engine_major_version = "11"
-instance_size        = "db.t4g.medium"
+instance_size        = "small"
 ```
 ...
 
@@ -56,8 +56,8 @@ This is the same model that organisations practice with could providers managed 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_instance_size"></a> [instance\_size](#input\_instance\_size) | The instance size of the RDS instance | `string` | n/a | yes |
-| <a name="input_engine_major_version"></a> [engine\_major\_version](#input\_engine\_major\_version) | The major version of the RDS PG Engine | `string` | n/a | yes |
+| <a name="input_engine_major_version"></a> [engine\_major\_version](#input\_engine\_major\_version) | The major version of the RDS PG Engine | `string` | n/a |   yes    |
+| <a name="input_instance_size"></a> [instance\_size](#input\_instance\_size) | The size of the RDS Aurora DB instance to launch. Valid values: small, medium, large, xlarge. | `string` | `"small"` |   yes    |
 
 ## Outputs
 

@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: resource-aws-rds
-  title: Resource AWS RDS
+  name: resource-pg-db
+  title: Resource PostgreSQL DB
   description: Self service an AWS RDS resource
   links:
     - url: https://github.com/TW-SEA-EMPC/pe-demo-resource-aws-rds#api
@@ -46,7 +46,12 @@ spec:
           title: Default DB Instance Size
           type: string
           description: You can specify a default and override per environment
-          default: "db.t4g.medium"
+          default: "small"
+          enum:
+            - small
+            - medium
+            - large
+            - xlarge
           ui:options:
             rows: 5
 

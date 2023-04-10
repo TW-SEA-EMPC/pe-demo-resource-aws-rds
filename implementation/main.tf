@@ -11,6 +11,12 @@ locals {
     stack       = local.stack
     environment = local.environment
   }
+  instance_type_map = {
+    small = "db.t4g.medium",
+    medium = "db.r5.xlarge",
+    large = "db.r5.2xlarge",
+    xlarge = "db.r5.4xlarge"
+  }
 }
 
 module "cluster" {
@@ -20,7 +26,7 @@ module "cluster" {
   name           = local.name
   engine         = "aurora-postgresql"
   engine_version = var.engine_major_version
-  instance_class = var.instance_size
+  instance_class = local.instance_type_map[var.instance_size]
   instances = {
     one = {}
   }
