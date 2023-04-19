@@ -42,7 +42,7 @@ STACK="rds"
 PLATFORM_ENVIRONMENT="iqa"
 pushd ${WORKING_DIR}
 terraform init --backend-config="key=${PLATFORM_ENVIRONMENT}/${COMPONENT}-${ENVIRONMENT}-${STACK}" --reconfigure
-terraform destroy \
+terraform destroy --auto-approve \
   ${VAR_FILE_ARGS} \
   -var "component=${COMPONENT}" \
   -var "environment=${ENVIRONMENT}" \
