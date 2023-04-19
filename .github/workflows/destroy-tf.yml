@@ -1,0 +1,55 @@
+name: destroy-tf
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+      owner:
+        required: true
+        type: string
+      aws-region:
+        required: false
+        type: string
+        default: ap-southeast-1
+      destroy:
+        required: false
+        type: boolean
+        default: false
+
+# Todo figure out concurrency, as inputs not available at time of scheduling (maybe)
+#concurrency: ${{ github.workflow }}-${{ inputs.component }}
+
+jobs:
+  destroy:
+    name: "destroy"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: job details
+        run: |
+          echo "Component: ${{ inputs.component }}"
+          echo "Env: ${{ inputs.env }}"
+          echo "Owner: ${{ inputs.owner }}"
+          echo "AWS_REGION: ${{ inputs.aws-region }}"
+          echo "Confirm Destroy: ${{ inputs.destroy }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::663626151492:role/github-actions-pe-demo-resource-aws-rds
+          role-session-name: ${{ github.workflow }}-iam-session
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: destroy
+        if: ${{ inputs.destroy }}
+        run: bash ./orchestration/cleanup.sh ${{ inputs.component }} ${{ inputs.env }} ${{ inputs.owner }} ./orchestration/example.config
