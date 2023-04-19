@@ -52,4 +52,4 @@ jobs:
 
       - name: destroy
         if: ${{ inputs.destroy }}
-        run: bash ./orchestration/cleanup.sh ${{ inputs.component }} ${{ inputs.env }} ${{ inputs.owner }} ./orchestration/example.config
+        run: ./orchestration/cleanup.sh ${{ inputs.component }} ${{ inputs.env }} ${{ inputs.owner }} ./orchestration/example.config
