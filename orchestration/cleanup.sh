@@ -34,7 +34,7 @@ fi
 
 # transform CONFIG_FILE_PATHS array into realapth of each element
 CONFIG_FILE_PATHS=($(realpath "${CONFIG_FILE_PATHS[@]}"))
-VAR_FILE_ARGS="${CONFIG_FILE_PATHS[@])/#/--var-file=}"
+VAR_FILE_ARGS="${CONFIG_FILE_PATHS[@]/#/--var-file=}"
 
 echo "${VAR_FILE_ARGS}"
 
